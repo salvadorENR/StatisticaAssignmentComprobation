@@ -1,0 +1,112 @@
+#Data set 1
+#Group A
+GA=c(5.2,5,3.6,4.5,3.1,4.2,4.9,4.3,2.2,3.9,4.9,5.7,6.3,4.1,4.5,4,
+     3.9,5.7,2.1,2.9,6.1,5.3,8.4,3.9,9,6.8,7.3,5.9,7.1,7.3,6.7,8.6,2.5,
+     3,6.1,0.3,4.9,1.2,5.8,9.8,5.6,9.1,2.9,4.8,6.3,8.2,4.3,3.7,7.8,6.7,
+     4.6,5.8,9.1,5.9,1.2,6,0.7,4.8,8.7,2.9,5.7,3.8,6.9,7.3)
+#Group B
+GB=c(0.1,	5.2,	6.3,	1.7,4.4,5,4.7,9.4,5.8,3.8,3.7,3.7,6.3,6,3.1,2.3,
+     2.9,6.9,8.1,3.7,1.9,5.9,1.5,5.1,8.8,4.7,2.2,7.9,0.8,6.1,2.9,6.4,5.2,
+     5.9,5.8,5.8,6.5,9.1,7.6,3.4,4.1,9.7,4.9,4.8,3.8,2.8,4.3,4.8,5.1,7.7,
+     5.8,6.8,9.1,5,3.7,7,4.8,6.1,5.8,6.4,6.7,6.4,6.1,5.1)
+
+#Data set 2
+#Group A
+GA=c(5.4,	4.9,	3.7,	4.4,3.2,	4.3,	5.1,	4.2,1.9,	3.8,	4.7,	5.9,6.4,3.9,	4.4,	3.8,
+     3.8,	5.8,	2,	2.8,6.2,	5.1,	8.6,	3.8,8.9,	6.9,	7.5,	5.8,7.2,	7.2,	6.5,	8.8,2.7,	2.9,	6.2,	0,
+     4.7,	1.1,	5.9,	9.9,5.7,	9.2,	3,	4.9,6.1,	8.3,	4,	3.9,8.1,	6.8,	4.7,	5.6,9,	5.8,	1,	6.1,
+     0.6,	4.7,	9,	2.8,5.8	,3.9,	6.8,	7.2)
+#Group B
+GB=c(6.9,8.2	,6.2,	1.9,4.3,	4.9,	4.9,	9.2,5.9,	3.9,	3.8,	3.8,6.2,	7.6,	6.4,	4.6,3.8,	8.6,	8.2,	3.9,
+     9.2,	7.3,	1.9,	4.9,8.9,	7.2,	1.9,	6.7,8.5,	6.1,	4.8,	6.3,5,	5.7,	6,	7.9,6.7,	9.3,	7.9,	5.1,4.2,	9.9,	
+     4.6,	4.9,3.9,	2.9,	4.2,	5.8,4.9,	7.8,	5.7,	7,9,	5.1,	3.8,	6.8,4.9,	5.9,	5.9,	6.2,6.8,	6.3,	6.2,	4.9)
+
+#Data set 3
+PreT=c(5.4,	4.9,	3.7,	4.4,3.2,	4.3,	5.1,	4.2,1.9,	3.8,	4.7,	5.9,6.4	,3.9,	4.4,	3.8,3.8,	5.8,	2,	2.8,
+     6.2,	5.1,	8.6,	3.8,8.9,	6.9,	7.5,	5.8,7.2,	7.2,	6.5,	8.8,2.7,	2.9,	6.2,	0,4.7,	1.1,	5.9,	9.9,5.7,
+     9.2,	3,	4.9,6.1,	8.3,	4,	3.9,8.1,	6.8,	4.7,	5.6,9,	5.8,	1,	6.1,0.6,	4.7,	9,	2.8,5.8,	3.9,	6.8,	7.2)
+PosT=c(6.8,	5.8,	4,	6.8,4.3,	6.8,	5.7,	5.5,2.2,	5.3,	5.9,	6.1,6.2,	4.9,	6.3,	4.5,5,	6.9,	2.6,	4,7.8,
+     7.1,	7.8,	4.8,8.9,	8.8,	7.6,	6.6,8.6,	9.9,	7.7,	9.8,3.1,	4.5,	8.4,	1.4,6.6,	2.5,	8.1	,9.1,7.7,	9.7,	
+     4.4,	4.8,9,	9,	4.3,	4.8,9.6,	7.7,	6.8,	7.3,9.1,	8,	6.9,	6.7,2.7,	5.7,	4.1,	2.9,6.6,	4.3,	8.9,	9.1)
+#----------------------------- Independent samples with 2 known variances ---------------------------------
+
+t.test_knownvar <- function(x, y, V1, V2, m0 = 0, alpha = 0.05, alternative = "two.sided") {
+  M1 <- mean(x)
+  M2 <- mean(y)
+  n1 <- length(x)
+  n2 <- length(y)
+  sigma1 <- sqrt(V1)
+  sigma2 <- sqrt(V2)
+  S <- sqrt((V1 / n1) + (V2 / n2))
+  statistic <- (M1 - M2 - m0) / S
+  p <- if (alternative == "two.sided") {
+    2 * pnorm(abs(statistic), lower.tail = FALSE)
+  } else if (alternative == "less") {
+    pnorm(statistic, lower.tail = TRUE)
+  } else {
+    pnorm(statistic, lower.tail = FALSE)
+  }
+  LCL <- (M1 - M2 - S * qnorm(1 - alpha / 2))
+  UCL <- (M1 - M2 + S * qnorm(1 - alpha / 2))
+  value <- list(mean1 = M1, mean2 = M2, m0 = m0, sigma1 = sigma1, sigma2 = sigma2, S = S, statistic = statistic, p.value = p, LCL = LCL, UCL = UCL, alternative = alternative)
+  # print(sprintf("P-value = %g",p))
+  # print(sprintf("Lower %.2f%% Confidence Limit = %g",
+  #               alpha, LCL))
+  # print(sprintf("Upper %.2f%% Confidence Limit = %g",
+  #               alpha, UCL))
+  return(value)
+}
+
+test <- t.test_knownvar(GA,GB,V1 = 4.9,V2 = 3.6,alternative = "less")
+test
+
+# Note that a similar function exists in the {BSDA} package:
+
+library(BSDA)
+
+z.test(GA,GB,alternative = "two.sided",mu = 0,sigma.x = 1,sigma.y = 1,conf.level = 0.95)
+
+
+#---------------------------Independent samples with 2 equal but unknown variances ---------------
+
+test <- t.test(GA, GB,var.equal = TRUE, alternative ="two.sided")
+test
+
+#-------------------------- Independent samples with 2 unequal and unknown variances----------------------- 
+test <- t.test(GA, GB,var.equal = FALSE,alternative = "less")
+test
+#-------------------------Paired samples where the variance of the differences is known--------------------- 
+t.test_pairedknownvar <- function(x, V, m0 = 0, alpha = 0.05, alternative = "two.sided") {
+  M <- mean(x)
+  n <- length(x)
+  sigma <- sqrt(V)
+  S <- sqrt(V / n)
+  statistic <- (M - m0) / S
+  p <- if (alternative == "two.sided") {
+    2 * pnorm(abs(statistic), lower.tail = FALSE)
+  } else if (alternative == "less") {
+    pnorm(statistic, lower.tail = TRUE)
+  } else {
+    pnorm(statistic, lower.tail = FALSE)
+  }
+  LCL <- (M - S * qnorm(1 - alpha / 2))
+  UCL <- (M + S * qnorm(1 - alpha / 2))
+  value <- list(mean = M, m0 = m0, sigma = sigma, statistic = statistic, p.value = p, LCL = LCL, UCL = UCL, alternative = alternative)
+  # print(sprintf("P-value = %g",p))
+  # print(sprintf("Lower %.2f%% Confidence Limit = %g",
+  #               alpha, LCL))
+  # print(sprintf("Upper %.2f%% Confidence Limit = %g",
+  #               alpha, UCL))
+  return(value)
+}
+
+test <- t.test_pairedknownvar( PosT- PreT,V = 4.8,alternative = "greater")
+test
+
+#------------------------------------------ Paired samples where the variance of the differences is unknown ----------------------------------------- 
+test <- t.test(PosT, PreT,alternative = "greater",paired = TRUE)
+test
+
+
+#Visit this link:
+#https://statsandr.com/blog/student-s-t-test-in-r-and-by-hand-how-to-compare-two-groups-under-different-scenarios/#scenario-5-paired-samples-where-the-variance-of-the-differences-is-unknown-1
